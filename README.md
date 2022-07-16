@@ -52,7 +52,7 @@ result should be like:
 
 cd to root module
 ```bash
-cd terraform-eks/
+cd eks-tf/eks-echo-server
 ```
 initialize a working directory and check resources
 ```terraform init; terrafrom plan```
