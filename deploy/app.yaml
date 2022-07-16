@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-server-app-service
+  labels:
+    app: App
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: App
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: App
+  template:
+    metadata:
+      labels:
+        app: App
+    spec:
+      containers:
+      - name: app
+        image: goldver0/echo_server:version_1
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "0.5"
+        ports:
+        - name: webrequests
+          containerPort: 5000
+# Mount config map
+        volumeMounts:
+          - name: mnt
+            mountPath: /app/templates/index.html
+            subPath: file-from-cfgmap
+      volumes:
+      - name: mnt
+        configMap:
+          name: app-cfgmap
